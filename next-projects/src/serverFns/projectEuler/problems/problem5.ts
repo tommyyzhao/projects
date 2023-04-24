@@ -4,7 +4,7 @@ import { getNextPrimeNumber } from "./problem3";
 // What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
 
 const problem5 = () => {
-  return katherinesSmartAlgorithm(20);
+  return `${katherinesSmartAlgorithm(20)}`;
   // return bruteForceAlgorithm();
 };
 

@@ -3,7 +3,7 @@
 const problem6 = () => {
   const n = 100;
 
-  return sumOfSquares(n) - sumOfNumbers(n) * sumOfNumbers(n);
+  return `${sumOfSquares(n) - sumOfNumbers(n) * sumOfNumbers(n)}`;
 };
 
 export default problem6;

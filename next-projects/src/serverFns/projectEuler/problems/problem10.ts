@@ -23,7 +23,7 @@ const problem10 = () => {
     nthPrime++;
   }
 
-  return sum;
+  return `${sum}`;
 };
 
 export default problem10;

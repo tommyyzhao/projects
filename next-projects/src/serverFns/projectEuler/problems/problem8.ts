@@ -40,7 +40,7 @@ const problem8 = () => {
     }
   }
 
-  return greatestProduct;
+  return `${greatestProduct}`;
 };
 
 export default problem8;

@@ -1,28 +1,29 @@
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import runProblem from "./runProblem";
 
 type Props = {
   problemNumber: number;
-  runProblem: () => ReactNode;
   autoRun: boolean;
 };
 
-const Problem = ({ problemNumber, runProblem, autoRun }: Props) => {
+const Problem = ({ problemNumber, autoRun }: Props) => {
   const [answer, setAnswer] = useState<ReactNode>();
-  const [startTime, setStartTime] = useState<number>();
-  const [endTime, setEndTime] = useState<number>();
+  const [totalRunTime, setTotalRunTime] = useState<number>();
+  const [serverRunTime, setServerRunTime] = useState<number>();
 
-  useEffect(() => {
-    if (answer) {
-      setEndTime(Date.now());
-    }
-  }, [answer]);
+  const handleButtonClick = useCallback(async () => {
+    const startTime = Date.now();
+    const intervalId = setInterval(() => {
+      setTotalRunTime(Date.now() - startTime);
+    }, 100);
 
-  const handleButtonClick = useCallback(() => {
-    setStartTime(Date.now());
-    const ans = runProblem();
+    const { ans, serverRunTime } = await runProblem(problemNumber);
+
+    clearInterval(intervalId);
+    setServerRunTime(serverRunTime);
     setAnswer(ans);
-  }, [runProblem]);
+  }, [problemNumber]);
 
   useEffect(() => {
     if (autoRun) {
@@ -35,7 +36,8 @@ const Problem = ({ problemNumber, runProblem, autoRun }: Props) => {
       <div>Problem #{problemNumber}:</div>
       <button onClick={handleButtonClick}>Run</button>
       <div>Ans: {answer}</div>
-      <div>Runtime: {endTime && startTime ? endTime - startTime : 0}ms</div>
+      <div>Total Runtime: {totalRunTime || 0}ms</div>
+      <div>Server Runtime: {serverRunTime || 0}ms</div>
     </Container>
   );
 };

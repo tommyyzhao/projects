@@ -32,7 +32,7 @@ const problem2 = () => {
     counter++;
   }
 
-  return total;
+  return `${total}`;
 };
 
 export default problem2;

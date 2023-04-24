@@ -26,7 +26,7 @@ const problem9 = () => {
       const bSquared = Math.pow(b, 2);
       const cSquared = Math.pow(c, 2);
       if (aSquared + bSquared === cSquared) {
-        return a * b * c;
+        return `${a * b * c}`;
       }
     }
   }

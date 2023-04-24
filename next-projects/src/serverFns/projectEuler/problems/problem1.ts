@@ -18,7 +18,7 @@ const problem1 = () => {
     }
   }
 
-  return total;
+  return `${total}`;
 };
 
 export default problem1;

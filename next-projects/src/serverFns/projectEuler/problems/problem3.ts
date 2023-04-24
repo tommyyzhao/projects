@@ -23,11 +23,11 @@ const problem3 = () => {
 
   // maxNumber is prime
   if (maxNumber !== 1 && primeFactors.length === 0) {
-    return maxNumber;
+    return `${maxNumber}`;
   }
 
   // calculate largest primeFactor
-  return Math.max(...primeFactors);
+  return `${Math.max(...primeFactors)}`;
 };
 
 export default problem3;

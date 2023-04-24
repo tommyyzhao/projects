@@ -16,9 +16,11 @@ const problem4 = () => {
     }
 
     if (isPalindrome(i) && isProductOf3DigitNumbers(i)) {
-      return i;
+      return `${i}`;
     }
   }
+
+  return "Not Found";
 };
 
 export default problem4;

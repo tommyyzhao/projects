@@ -3,13 +3,19 @@ export const primeNumberGenerator = () => {
   const calculatedPrimeNumbers: number[] = [];
 
   const findNextPrime = (startNumber: number) => {
-    let currNumber = startNumber;
+    // currNumber will be prime, so start at 1 past the prime number
+    let currNumber = startNumber + 1;
     while (true) {
       let notPrime = false;
       for (let i = 0; i < calculatedPrimeNumbers.length; i++) {
         if (currNumber % calculatedPrimeNumbers[i] === 0) {
           // number is not prime
           notPrime = true;
+          break;
+        }
+
+        // if we've gotten to a prime number that is greater than the sqrt of the number, than the number is prime
+        if (calculatedPrimeNumbers[i] > Math.ceil(Math.sqrt(currNumber))) {
           break;
         }
       }
