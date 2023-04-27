@@ -15,21 +15,31 @@ export default async function euler(
     problemNumber = problemNumber.join("");
   }
 
+  // import problem
+  let problem: () => string = () => "";
   try {
     const folderName = getFolderName(problemNumber);
-    const { default: problem } = await import(
+    const { default: importedProblem } = await import(
       `@/serverFns/projectEuler/problems/${folderName}`
     );
-
-    const startTime = Date.now();
-    const answer = problem();
-    const endTime = Date.now();
-
-    res.status(200).json({ answer, runTime: endTime - startTime });
+    problem = importedProblem;
   } catch (e) {
     res
       .status(500)
       .json({ answer: "Solution not yet implemented", runTime: 0 });
+  }
+
+  // run problem with error handling
+  const startTime = Date.now();
+  try {
+    const answer = problem();
+    const endTime = Date.now();
+
+    return res.status(200).json({ answer, runTime: endTime - startTime });
+  } catch (e) {
+    return res
+      .status(500)
+      .json({ answer: `Error: ${e}`, runTime: Date.now() - startTime });
   }
 }
 

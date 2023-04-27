@@ -12,16 +12,13 @@ const EulerProject = () => {
       <PageContainer>
         <Header>Project Euler:</Header>
         <ProblemContainer>
-          <Problem problemNumber={1} autoRun={runAll} />
-          <Problem problemNumber={2} autoRun={runAll} />
-          <Problem problemNumber={3} autoRun={runAll} />
-          <Problem problemNumber={4} autoRun={runAll} />
-          <Problem problemNumber={5} autoRun={runAll} />
-          <Problem problemNumber={6} autoRun={runAll} />
-          <Problem problemNumber={7} autoRun={runAll} />
-          <Problem problemNumber={8} autoRun={runAll} />
-          <Problem problemNumber={9} autoRun={runAll} />
-          <Problem problemNumber={10} autoRun={runAll} />
+          {[...Array(10).keys(), 141].map((i) => (
+            <Problem
+              key={`problem-number-${i}`}
+              problemNumber={i + 1}
+              autoRun={runAll}
+            />
+          ))}
         </ProblemContainer>
         <button onClick={() => setRunAll(true)}>Run all</button>
       </PageContainer>
