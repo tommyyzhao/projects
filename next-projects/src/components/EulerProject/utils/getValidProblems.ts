@@ -4,19 +4,22 @@ import fs from "fs";
 const getValidProblems = async (): Promise<
   [key: number, problemNumbers: number[]][]
 > => {
-  const problemsDirectory = path.join(__dirname, "../../server");
+  const problemsDirectory = path.join(
+    process.cwd(),
+    "src/serverFns/projectEuler/problems"
+  );
+
+  const files: string[] = [];
 
   try {
-    const files = await fs.promises.readdir(problemsDirectory);
-    const problems = files.filter((fileName) =>
-      fileName.startsWith("src_serverFns_projectEuler_problems")
-    );
+    await recursivelyGetFiles(problemsDirectory, files);
 
-    const problemNumbers = problems.map((problemName) => {
-      const arr = problemName.split("_");
-      // str = "problem#"
-      const str = arr[arr.length - 2];
-      return parseInt(str.split("problem")[1]);
+    const problemNumbers = files.map((problemName) => {
+      const arr = problemName.split("/");
+      // str = "problem#.ts"
+      const str = arr[arr.length - 1];
+      const withoutExtension = str.split(".")[0];
+      return parseInt(withoutExtension.split("problem")[1]);
     });
 
     const sortedProblemNumbers = problemNumbers.sort((a, b) => a - b);
@@ -49,3 +52,14 @@ const getValidProblems = async (): Promise<
 };
 
 export default getValidProblems;
+
+const recursivelyGetFiles = async (directory: string, files: string[]) => {
+  fs.readdirSync(directory).forEach((File) => {
+    const Absolute = path.join(directory, File);
+    if (fs.statSync(Absolute).isDirectory()) {
+      return recursivelyGetFiles(Absolute, files);
+    }
+
+    return files.push(Absolute);
+  });
+};
