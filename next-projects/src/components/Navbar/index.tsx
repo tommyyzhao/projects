@@ -4,9 +4,12 @@ import { white } from "@/styles/colors";
 
 const Navbar = () => (
   <Container>
-    <Link href="/">
+    <Link href="/" style={{ flex: 1 }}>
       <Heading>Projects</Heading>
     </Link>
+    <FlexSpacer />
+    <FlexSpacer />
+    <FlexSpacer />
   </Container>
 );
 
@@ -35,4 +38,9 @@ const Container = styled.div`
 
 const Heading = styled.div`
   color: ${white};
+  text-align: center;
+`;
+
+const FlexSpacer = styled.div`
+  flex: 1;
 `;
