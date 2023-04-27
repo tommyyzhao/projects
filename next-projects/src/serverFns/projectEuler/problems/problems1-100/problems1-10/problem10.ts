@@ -6,7 +6,7 @@ Find the sum of all the primes below two million.
 
 */
 
-import primeNumberGenerator from "../helpers/primeNumberGenerator";
+import primeNumberGenerator from "../../../helpers/primeNumberGenerator";
 
 const problem10 = () => {
   const twoMillion = 2000000;

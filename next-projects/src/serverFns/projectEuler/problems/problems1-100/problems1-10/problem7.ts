@@ -1,4 +1,4 @@
-import primeNumberGenerator from "../helpers/primeNumberGenerator";
+import primeNumberGenerator from "../../../helpers/primeNumberGenerator";
 
 const problem7 = () => {
   const getNthPrimeNumber = primeNumberGenerator();
