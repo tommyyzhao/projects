@@ -77,7 +77,7 @@ const findPrimeFactors = (n: number, getNextPrime: (n: number) => number) => {
   return primeFactorRecord;
 };
 
-const bruteForceAlgorithm = () => {
+export const bruteForceAlgorithm = () => {
   const smallestNumberDivisbleThrough10 = 2520;
 
   let counter = smallestNumberDivisbleThrough10;

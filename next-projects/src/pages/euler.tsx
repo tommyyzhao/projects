@@ -1,4 +1,3 @@
-import Problem from "@/components/EulerProject/modules/Problem";
 import { useState } from "react";
 import styled from "styled-components";
 import Navbar from "@/components/Navbar";
