@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Problem from "./Problem";
 import styled from "styled-components";
+import ProblemDetails from "./ProblemDetails";
 
 type Props = {
   problemNumbers: number[];
@@ -9,6 +10,16 @@ type Props = {
 
 const DisplayProblems = ({ problemNumbers, resetProblemGroup }: Props) => {
   const [autoRun, setAutoRun] = useState(false);
+  const [problemDetailsNumber, setProblemDetailsNumber] = useState<number>();
+
+  if (problemDetailsNumber) {
+    return (
+      <ProblemDetails
+        problemNumber={problemDetailsNumber}
+        showProblems={() => setProblemDetailsNumber(undefined)}
+      />
+    );
+  }
 
   return (
     <div>
@@ -22,6 +33,7 @@ const DisplayProblems = ({ problemNumbers, resetProblemGroup }: Props) => {
             key={`problem-${index}`}
             problemNumber={problemNumber}
             autoRun={autoRun}
+            showProblemDetails={() => setProblemDetailsNumber(problemNumber)}
           />
         ))}
       </ProblemContainer>

@@ -6,9 +6,10 @@ import CardButton from "./CardButton";
 type Props = {
   problemNumber: number;
   autoRun: boolean;
+  showProblemDetails: () => void;
 };
 
-const Problem = ({ problemNumber, autoRun }: Props) => {
+const Problem = ({ problemNumber, autoRun, showProblemDetails }: Props) => {
   const [answer, setAnswer] = useState<ReactNode>();
   const [totalRunTime, setTotalRunTime] = useState<number>();
   const [serverRunTime, setServerRunTime] = useState<number>();
@@ -33,26 +34,29 @@ const Problem = ({ problemNumber, autoRun }: Props) => {
   }, [autoRun, handleButtonClick]);
 
   return (
-    <CardButton onClick={handleButtonClick}>
-      <Container>
-        <Header>Problem #{problemNumber}</Header>
-        <RunningContainer>
-          {answer ? (
-            <Answer>
-              <div>
-                <div>Answer:</div>
-                <div style={{ marginTop: "8px" }}>{answer}</div>
-              </div>
-              <div>Server Runtime: {serverRunTime || 0}ms</div>
-            </Answer>
-          ) : totalRunTime ? (
-            <div>Running: {totalRunTime || 0}ms</div>
-          ) : (
-            "Click to run"
-          )}
-        </RunningContainer>
-      </Container>
-    </CardButton>
+    <>
+      <CardButton onClick={handleButtonClick}>
+        <Container>
+          <Header>Problem #{problemNumber}</Header>
+          <RunningContainer>
+            {answer ? (
+              <Answer>
+                <div>
+                  <div>Answer:</div>
+                  <div style={{ marginTop: "8px" }}>{answer}</div>
+                </div>
+                <div>Server Runtime: {serverRunTime || 0}ms</div>
+              </Answer>
+            ) : totalRunTime ? (
+              <div>Running: {totalRunTime || 0}ms</div>
+            ) : (
+              "Click to run"
+            )}
+          </RunningContainer>
+        </Container>
+      </CardButton>
+      <ViewProblem onClick={showProblemDetails}>View Problem</ViewProblem>
+    </>
   );
 };
 
@@ -80,6 +84,10 @@ const RunningContainer = styled.div`
 
   margin-top: 16px;
   margin-bottom: 16px;
+`;
+
+const ViewProblem = styled.button`
+  margin-top: 8px;
 `;
 
 const Answer = styled.div`
