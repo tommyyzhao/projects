@@ -1,13 +1,26 @@
-import { readFileSync } from "fs";
-import { OpenAI } from "langchain/llms/openai";
-import path from "path";
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import getNewMessage from "@/serverFns/chatbot/getNewMessage";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-const runChatbot = async (text: string) => {
-  const directory = path.join(process.cwd(), "keys/open-ai-key");
-  const apiKey = readFileSync(directory, "utf8");
-  const llm = new OpenAI({ openAIApiKey: apiKey, temperature: 0.5 });
-  const response = await llm.call(text);
-  return response;
+type Data = {
+  response: string;
 };
 
-export default runChatbot;
+export default async function euler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
+  let input = req.query.input || "";
+  if (Array.isArray(input)) {
+    input = input.join("");
+  }
+
+  try {
+    console.log("hit");
+    const response = await getNewMessage(input);
+
+    return res.status(200).json({ response });
+  } catch (e: any) {
+    return res.status(500).json({ response: `Error: ${e}` });
+  }
+}

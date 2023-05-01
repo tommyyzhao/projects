@@ -1,39 +1,73 @@
 import axios from "axios";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 
+type Message = {
+  writer: "You" | "Bot";
+  content: string;
+};
+
 const Chatbot = () => {
-  const [history, setHistory] = useState("");
+  const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const newMessage = async (turn: number) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // TODO: upgrade so that it only responds after a delay and reads all messages since last sent
+  const getResponse = async (input: string) => {
     setIsLoading(true);
-    const response = await axios.get(
-      `/api/hello?turn=${turn}&history=${history}`
-    );
-    setHistory(
-      (prevHistory) =>
-        `${prevHistory}\n ${
-          turn
-            ? `He says: ${response.data.data}`
-            : `She says: ${response.data.data}`
-        }`
-    );
+    const response = await axios.get(`/api/chatbot?input=${input}`);
+    setChatHistory((prevHistory) => [
+      ...prevHistory,
+      { writer: "Bot", content: response.data.response },
+    ]);
     setIsLoading(false);
   };
 
   return (
     <Container>
-      <ButtonContainer>
-        <button onClick={() => newMessage(0)}>Girl Responds</button>
-        <button onClick={() => newMessage(1)}>Boy Responds</button>
-      </ButtonContainer>
       <Response>
-        {history.split("\n").map((x, i) => (
-          <div key={`message-${i}`}>{x}</div>
+        {chatHistory.map((message: Message, key) => (
+          <MessageContainer key={`message-${key}`}>
+            <div style={{ marginRight: "12px" }}>{message.writer}:</div>
+            <div>{message.content}</div>
+          </MessageContainer>
         ))}
+        {isLoading && (
+          <MessageContainer>
+            <div style={{ marginRight: "12px" }}>AI:</div>
+            <div>...</div>
+          </MessageContainer>
+        )}
+        <InputContainer>
+          <input
+            type="text"
+            ref={inputRef}
+            style={{
+              height: "24px",
+              width: "500px",
+              padding: "8px",
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              if (inputRef.current) {
+                const inputtedText = inputRef.current.value;
+
+                setChatHistory((prevHistory) => [
+                  ...prevHistory,
+                  { writer: "You", content: inputtedText },
+                ]);
+                getResponse(inputtedText);
+                inputRef.current.value = ""; // clear input
+              }
+            }}
+          >
+            send
+          </button>
+        </InputContainer>
       </Response>
-      {isLoading && "Loading..."}
     </Container>
   );
 };
@@ -43,19 +77,25 @@ export default Chatbot;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
 
   width: 100%;
   height: 100vh;
 `;
 
-const ButtonContainer = styled.div`
-  margin-top: 24px;
-  margin-bottom: 24px;
+const MessageContainer = styled.div`
   display: flex;
   flex-direction: row;
   column-gap: 24px;
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  column-gap: 24px;
+  margin-top: 48px;
 `;
 
 const Response = styled.div`
