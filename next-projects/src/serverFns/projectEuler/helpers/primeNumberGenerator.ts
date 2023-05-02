@@ -4,7 +4,7 @@ export const primeNumberGenerator = () => {
 
   const findNextPrime = (startNumber: number) => {
     // currNumber will be prime, so start at 1 past the prime number
-    let currNumber = startNumber + 1;
+    let currNumber = startNumber;
     while (true) {
       let notPrime = false;
       for (let i = 0; i < calculatedPrimeNumbers.length; i++) {
@@ -45,7 +45,7 @@ export const primeNumberGenerator = () => {
 
     while (calculatedPrimeNumbers.length < nthPrimeNumber) {
       const currNumber = calculatedPrimeNumbers.length
-        ? calculatedPrimeNumbers[calculatedPrimeNumbers.length - 1]
+        ? calculatedPrimeNumbers[calculatedPrimeNumbers.length - 1] + 1
         : 2;
       findNextPrime(currNumber);
     }

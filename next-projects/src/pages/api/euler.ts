@@ -32,7 +32,7 @@ export default async function euler(
   // run problem with error handling
   const startTime = Date.now();
   try {
-    const answer = problem();
+    const answer = await problem();
     const endTime = Date.now();
 
     return res.status(200).json({ answer, runTime: endTime - startTime });
