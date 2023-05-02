@@ -3,13 +3,15 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 
 type Message = {
-  writer: "You" | "Bot";
+  writer: "You" | "Jimmy AI";
   content: string;
 };
 
 const Chatbot = () => {
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [memoryStatus, setMemoryStatus] = useState("");
+  const [memory, setMemory] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -19,23 +21,56 @@ const Chatbot = () => {
     const response = await axios.get(`/api/chatbot?input=${input}`);
     setChatHistory((prevHistory) => [
       ...prevHistory,
-      { writer: "Bot", content: response.data.response },
+      { writer: "Jimmy AI", content: response.data.response },
     ]);
+    setIsLoading(false);
+  };
+
+  const startConvo = async () => {
+    const welcomeMessage = "Hi! My name is Andrew.";
+    setIsLoading(true);
+    const response = await axios.get(`/api/chatbot?input=${welcomeMessage}`);
+    setChatHistory(() => [
+      { writer: "Jimmy AI", content: response.data.response },
+    ]);
+    setMemoryStatus(response.data.memoryStatus);
+    setMemory(response.data.memory);
     setIsLoading(false);
   };
 
   return (
     <Container>
       <Response>
+        <button onClick={startConvo}>Start Convo</button>
+        <div>Memory Status: {memoryStatus}</div>
+        <div>Memory: {memory}</div>
         {chatHistory.map((message: Message, key) => (
           <MessageContainer key={`message-${key}`}>
-            <div style={{ marginRight: "12px" }}>{message.writer}:</div>
-            <div>{message.content}</div>
+            <div
+              style={{
+                marginRight: "12px",
+                flexShrink: "0",
+                width: "100px",
+                color: `${message.writer === "You" ? "white" : "#0fab3b"}`,
+              }}
+            >
+              {message.writer}:
+            </div>
+            <div
+              style={{
+                textAlign: "left",
+                color: `${message.writer === "You" ? "white" : "#0fab3b"}`,
+              }}
+            >
+              {message.content}
+            </div>
           </MessageContainer>
         ))}
         {isLoading && (
           <MessageContainer>
-            <div style={{ marginRight: "12px" }}>AI:</div>
+            <div style={{ marginRight: "12px", color: "#0fab3b" }}>
+              Jimmy AI:
+            </div>
             <div>...</div>
           </MessageContainer>
         )}
@@ -88,6 +123,7 @@ const MessageContainer = styled.div`
   display: flex;
   flex-direction: row;
   column-gap: 24px;
+  margin-top: 8px;
 `;
 
 const InputContainer = styled.div`

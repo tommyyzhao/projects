@@ -4,6 +4,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
   response: string;
+  memoryStatus?: string;
+  memory?: string;
 };
 
 export default async function euler(
@@ -16,10 +18,9 @@ export default async function euler(
   }
 
   try {
-    console.log("hit");
-    const response = await getNewMessage(input);
+    const { text, memoryStatus, memory } = await getNewMessage(input);
 
-    return res.status(200).json({ response });
+    return res.status(200).json({ response: text, memoryStatus, memory });
   } catch (e: any) {
     return res.status(500).json({ response: `Error: ${e}` });
   }
