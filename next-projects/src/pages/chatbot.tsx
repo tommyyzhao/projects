@@ -23,6 +23,8 @@ const Chatbot = () => {
       ...prevHistory,
       { writer: "Jimmy AI", content: response.data.response },
     ]);
+    setMemoryStatus(response.data.memoryStatus);
+    setMemory(response.data.memory);
     setIsLoading(false);
   };
 
