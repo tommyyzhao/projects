@@ -1,9 +1,11 @@
+// import axios from "axios";
 import axios from "axios";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
 import styled from "styled-components";
 
 type Message = {
-  writer: "You" | "Jimmy AI";
+  writer: "You" | "Big G";
   content: string;
 };
 
@@ -15,33 +17,39 @@ const Chatbot = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // TODO: upgrade so that it only responds after a delay and reads all messages since last sent
+  const [currentResponse, setCurrentResponse] = useState("");
+  const socketRef = useRef<any>(null);
+
+  useEffect(() => {
+    socketRef.current = io("http://localhost:3001");
+
+    socketRef.current.on("newToken", (token: string) => {
+      setCurrentResponse((prevResponse) => prevResponse + token);
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
+
   const getResponse = async (input: string) => {
     setIsLoading(true);
-    const response = await axios.get(`/api/chatbot?input=${input}`);
-    setChatHistory((prevHistory) => [
-      ...prevHistory,
-      { writer: "Jimmy AI", content: response.data.response },
-    ]);
-    setIsLoading(false);
-  };
-
-  const startConvo = async () => {
-    const welcomeMessage = "Hi! My name is Andrew.";
-    setIsLoading(true);
-    const response = await axios.get(`/api/chatbot?input=${welcomeMessage}`);
-    setChatHistory(() => [
-      { writer: "Jimmy AI", content: response.data.response },
-    ]);
+    setCurrentResponse("");
+    const response = await axios.get(
+      `/api/chatbot?input=${input}&socketId=${socketRef.current.id}`
+    );
     setMemoryStatus(response.data.memoryStatus);
     setMemory(response.data.memory);
+    setChatHistory((prevHistory) => [
+      ...prevHistory,
+      { writer: "Big G", content: response.data.response },
+    ]);
     setIsLoading(false);
   };
 
   return (
     <Container>
       <Response>
-        <button onClick={startConvo}>Start Convo</button>
         <div>Memory Status: {memoryStatus}</div>
         <div>Memory: {memory}</div>
         {chatHistory.map((message: Message, key) => (
@@ -59,6 +67,7 @@ const Chatbot = () => {
             <div
               style={{
                 textAlign: "left",
+                whiteSpace: "pre-wrap",
                 color: `${message.writer === "You" ? "white" : "#0fab3b"}`,
               }}
             >
@@ -68,10 +77,16 @@ const Chatbot = () => {
         ))}
         {isLoading && (
           <MessageContainer>
-            <div style={{ marginRight: "12px", color: "#0fab3b" }}>
-              Jimmy AI:
+            <div style={{ marginRight: "12px", color: "#0fab3b" }}>Big G:</div>
+            <div
+              style={{
+                textAlign: "left",
+                whiteSpace: "pre-wrap",
+                color: "#0fab3b",
+              }}
+            >
+              {currentResponse}
             </div>
-            <div>...</div>
           </MessageContainer>
         )}
         <InputContainer>
@@ -86,6 +101,7 @@ const Chatbot = () => {
           />
           <button
             type="button"
+            disabled={isLoading}
             onClick={() => {
               if (inputRef.current) {
                 const inputtedText = inputRef.current.value;
@@ -114,7 +130,6 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-
   width: 100%;
   height: 100vh;
 `;

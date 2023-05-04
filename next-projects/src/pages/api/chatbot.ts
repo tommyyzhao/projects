@@ -17,8 +17,13 @@ export default async function euler(
     input = input.join("");
   }
 
+  let socketId = req.query.socketId || "";
+  if (Array.isArray(socketId)) {
+    socketId = socketId.join("");
+  }
+
   try {
-    const { text, memoryStatus, memory } = await getNewMessage(input);
+    const { text, memoryStatus, memory } = await getNewMessage(input, socketId);
 
     return res.status(200).json({ response: text, memoryStatus, memory });
   } catch (e: any) {
