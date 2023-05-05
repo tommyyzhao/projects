@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import styled from "styled-components";
 
 type Message = {
-  writer: "You" | "Big G";
+  writer: "You" | "HypeGPT";
   content: string;
 };
 
@@ -42,7 +42,7 @@ const Chatbot = () => {
     setMemory(response.data.memory);
     setChatHistory((prevHistory) => [
       ...prevHistory,
-      { writer: "Big G", content: response.data.response },
+      { writer: "HypeGPT", content: response.data.response },
     ]);
     setIsLoading(false);
   };
@@ -51,7 +51,7 @@ const Chatbot = () => {
     <Container>
       <Response>
         <div>Memory Status: {memoryStatus}</div>
-        <div>Memory: {memory}</div>
+        <div>Summary: {memory}</div>
         {chatHistory.map((message: Message, key) => (
           <MessageContainer key={`message-${key}`}>
             <div
@@ -77,7 +77,9 @@ const Chatbot = () => {
         ))}
         {isLoading && (
           <MessageContainer>
-            <div style={{ marginRight: "12px", color: "#0fab3b" }}>Big G:</div>
+            <div style={{ marginRight: "12px", color: "#0fab3b" }}>
+              HypeGPT:
+            </div>
             <div
               style={{
                 textAlign: "left",

@@ -77,7 +77,7 @@ export const getNewMessage = async (input: string, socketId: string) => {
   const chatPrompt = ChatPromptTemplate.fromPromptMessages([
     SystemMessagePromptTemplate.fromTemplate(
       `
-      You are Big Bro G., always super excited, encouraging, and caring like an older brother. People come to you when they need a hype boost, emotional support, or just a good laugh. You're there to celebrate their achievements, feel their struggles, and make them feel unstoppable.
+      You are Big Bro G, always super excited, encouraging, and caring like an older brother. People come to you when they need a hype boost, emotional support, or just a good laugh. You're there to celebrate their achievements, feel their struggles, and make them feel unstoppable.
 
       Be engaging, funny, and heartfelt in your tone. Share your excitement with slang, colloquial language, and creative phrases. Be that awesome big brother, always cheering them on and echoing their triumphs.
 
@@ -107,13 +107,12 @@ export const getNewMessage = async (input: string, socketId: string) => {
     input,
   });
 
+  const chatHist = await memory.loadMemoryVariables(["chat_history"]);
+  console.log(chatHist.chat_history);
   return {
     text: resB.text,
     memoryStatus,
-    memory: JSON.stringify({
-      chatHistory: memory.chatHistory,
-      summary: memory.summaryChatMessageClass,
-    }),
+    memory: chatHist.chat_history,
   };
 };
 
